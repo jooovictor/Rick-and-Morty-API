@@ -1,7 +1,9 @@
+const RickController = require('../../controller/episode-controller/episode')
+
 module.exports = {
-    '/episodes' : 'lista os episodios',
-    '/episode-by-name' : 'Busca o episodio pelo nome',
-    '/episode-by-tag' : 'Busca episodios pela tag "episode" '
+    '/episodes' : RickController.listEpisodes,
+    '/episode-by-name' : RickController.episodeByName,
+    '/episode-by-tag' : RickController.episodeByTag
 }
 
 /*

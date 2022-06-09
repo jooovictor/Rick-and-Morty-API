@@ -1,6 +1,6 @@
-const Rick = require('../models/rick')
-const { setResponse, getErrorResponse } = require("../utils/httpResponse")
-const { verifyConditionString, verifyConditionNumber } = require('../utils/verifier')
+const RickCharacter = require('../../models/charater-model/character')
+const { setResponse, getErrorResponse } = require("../../utils/httpResponse")
+const { verifyConditionString, verifyConditionNumber } = require('../../utils/verifier')
 
 class RickController{
     static async listCharacters(req, res) {
@@ -10,7 +10,7 @@ class RickController{
                 throw setResponse(400, "Page is invalid")
             }
 
-            const rick = await Rick.listCharacters(page)
+            const rick = await RickCharacter.listCharacters(page)
 
             res.writeHead(200)
             res.end(JSON.stringify(rick))
@@ -23,12 +23,17 @@ class RickController{
 
     static async listCharactersByStatus (req, res) {
         try {
-            const { status } = req.queryParams
+            const { status, page } = req.queryParams
+
             if(status && status !== 'alive' && status !== 'dead' && status !== 'unknown'){
-                throw setResponse(400, "Status must be a alive, dead or unknown")
+                throw setResponse(404, "Status must be a alive, dead or unknown")
+            } 
+
+            if(verifyConditionNumber(page)){
+                throw setResponse(400, "Page must be a number")
             }
             
-            const rick = await Rick.listCharactersByStatus(status)
+            const rick = await RickCharacter.listCharactersByStatus(status, page)
             
             res.writeHead(200)
             res.end(JSON.stringify(rick))
@@ -41,12 +46,16 @@ class RickController{
 
     static async listCharactersBySpecie (req, res) {
         try {
-            const { species } = req.queryParams
+            const { species, page } = req.queryParams
             if(verifyConditionString(species)){
                 throw setResponse(400, "Specie is required or invalid")
             }
+
+            if(verifyConditionNumber(page)){
+                throw setResponse(400, "Page must be a number")
+            }
             
-            const rick = await Rick.listCharactersBySpecie(species)
+            const rick = await RickCharacter.listCharactersBySpecie(species, page)
             
             
             res.writeHead(200)
@@ -60,12 +69,16 @@ class RickController{
 
     static async listCharactersByGender (req, res) {
         try {
-            const { gender } = req.queryParams
+            const { gender, page } = req.queryParams
             if(verifyConditionString(gender)){
                 throw setResponse(400, "Gender is required or invalid")
             }
+
+            if(verifyConditionNumber(page)){
+                throw setResponse(400, "Page must be a number")
+            }
             
-            const rick = await Rick.listCharactersByGender(gender)
+            const rick = await RickCharacter.listCharactersByGender(gender, page)
             
             res.writeHead(200)
             res.end(JSON.stringify(rick))
@@ -78,12 +91,16 @@ class RickController{
 
     static async listCharactersByOrigin (req, res) {
         try {
-            const { origin } = req.queryParams
+            const { origin, page } = req.queryParams
             if(verifyConditionString(origin)){
                 throw setResponse(400, "Origin is required or invalid")
             }
-            
-            const rick = await Rick.listCharactersByOrigin(origin)
+
+            if(verifyConditionNumber(page)){
+                throw setResponse(400, "Page must be a number")
+            }
+        
+            const rick = await RickCharacter.listCharactersByOrigin(page, origin)
             
             res.writeHead(200)
             res.end(JSON.stringify(rick))
@@ -96,12 +113,16 @@ class RickController{
 
     static async searchCharacterByName (req, res) {
         try {
-            const { name } = req.queryParams
+            const { name, page } = req.queryParams
             if(verifyConditionString(name)){
                 throw setResponse(400, "Name is required or invalid")
             }
+
+            if(verifyConditionNumber(page)){
+                throw setResponse(400, "Page must be a number")
+            }
             
-            const rick = await Rick.searchCharacterByName(name)
+            const rick = await RickCharacter.searchCharacterByName(name, page)
             
             res.writeHead(200)
             res.end(JSON.stringify(rick))
@@ -119,7 +140,7 @@ class RickController{
                 throw setResponse(400, "Id is required or invalid")
             }
             
-            const rick = await Rick.searchCharacterById(id)
+            const rick = await RickCharacter.searchCharacterById(id)
             
             res.writeHead(200)
             res.end(JSON.stringify(rick))
@@ -128,6 +149,26 @@ class RickController{
             res.writeHead(status)
             res.end(message)
         }
+    }
+
+    static async saveCharacterById(req, res){ 
+        try {
+            const {id} = req.queryParams
+            if(verifyConditionNumber(id)){
+                throw setResponse(400, "Id is required or invalid")
+            }
+
+            const character = await RickCharacter.searchCharacterById(id)
+            await RickCharacter.saveCharacterById(character)
+
+            res.writeHead(200)
+            res.end(`personagem ${character.name} salvo com sucesso`)
+        } catch (error) {
+            const { status, message } = getErrorResponse(error)
+            res.writeHead(status)
+            res.end(message)
+        }
+        
     }
 }
 

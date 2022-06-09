@@ -1,4 +1,4 @@
-const RickController = require('../../controller/rick-controller')
+const RickController = require('../../controller/character-controller/character')
 
 module.exports = {
     '/characters' : RickController.listCharacters,
@@ -7,7 +7,8 @@ module.exports = {
     '/characters-gender': RickController.listCharactersByGender,
     '/characters-origin': RickController.listCharactersByOrigin,
     '/character-by-name': RickController.searchCharacterByName,
-    '/character-by-id': RickController.searchCharacterById
+    '/character-by-id': RickController.searchCharacterById,
+    '/character-save-by-id': RickController.saveCharacterById
 }
 
 /*
