@@ -23,7 +23,7 @@ Oque vc vai precisar pra rodar essa aplicação:
 
 | Rotas  |  Ações  | parametros |
 | ------------------- | ------------------- |------------------- |
-|  /characters |  Célula de conteúdo | page |
+|  /characters |  Lista todos os personagens | page |
 |  /characters-origin |  Lista os personagens por sua origem | page, origin |
 |  /characters-status |  Lista os personagens por seu status | page, status |
 |  /characters-specie|  Lista os personagens por sua especie | page, species |
